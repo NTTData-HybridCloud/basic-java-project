@@ -1,0 +1,17 @@
+{
+  "name": "basic-java-project",
+  "image": "mcr.microsoft.com/devcontainers/java:1-17-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-maven"
+      ]
+    }
+  },
+  "postCreateCommand": "bash -lc 'if ! command -v mvn >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y maven; fi; mvn -v && mvn -q test'",
+  "remoteUser": "vscode"
+}
