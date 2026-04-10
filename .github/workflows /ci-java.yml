@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - ci-java-integration 
-
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
