@@ -4,10 +4,10 @@ name: CI Java
 on:
   push:
     branches:
-      - ci-java-integration # Cambia esto a tu rama de trabajo si es necesario
+      - ci-java-integration 
   pull_request:
     branches:
-      - ci-java-integration # Cambia esto a tu rama de trabajo si es necesario
+      - ci-java-integration 
 
 jobs:
   build:
