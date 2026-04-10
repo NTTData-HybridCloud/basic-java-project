@@ -1,0 +1,57 @@
+# Workflow de Integración Continua para proyectos Java
+name: CI Java
+
+on:
+  push:
+    branches:
+      - ci-java-integration # Cambia esto a tu rama de trabajo si es necesario
+  pull_request:
+    branches:
+      - ci-java-integration # Cambia esto a tu rama de trabajo si es necesario
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    # Permisos necesarios para que el GITHUB_TOKEN pueda subir paquetes
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # 1. Descargar código
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Configurar Java 17
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          # Configura el registry para publicar en GitHub Packages
+          server-id: github
+          server-username: ${{ github.actor }}
+          server-password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 3. Instalar dependencias
+      - name: Install dependencies
+        run: mvn install -DskipTests
+
+      # 4. Ejecutar tests
+      - name: Run tests
+        run: mvn test
+
+      # 5. Construir proyecto
+      # Genera el artefacto final (.jar o .war) saltando los tests porque ya se ejecutaron en el paso anterior
+      - name: Build project
+        run: mvn package -DskipTests
+
+      # 6. Publicar en GitHub Packages
+      # Inyectamos el nombre del repositorio en minúsculas para evitar errores 401 en el servidor de GitHub
+      - name: Publish to GitHub Packages
+        run: |
+          REPO_LOWERCASE=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          mvn deploy -DskipTests -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/$REPO_LOWERCASE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
