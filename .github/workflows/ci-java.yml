@@ -1,13 +1,14 @@
 # Workflow de Integración Continua para proyectos Java
 name: CI Java
 
+# Se ejecuta automáticamente en eventos comunes
 on:
   push:
     branches:
-      - ci-java-integration # Cambia esto a tu rama de trabajo si es necesario
+      - ci-java-integration
   pull_request:
     branches:
-      - ci-java-integration # Cambia esto a tu rama de trabajo si es necesario
+      - ci-java-integration
 
 jobs:
   build:
@@ -29,10 +30,20 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          # Configura el registry para publicar en GitHub Packages
-          server-id: github
-          server-username: ${{ github.actor }}
-          server-password: ${{ secrets.GITHUB_TOKEN }}
+          cache: maven
+
+      # 2.5 Crear settings.xml con credenciales de GitHub Packages
+      - name: Configure Maven for GitHub Packages
+        uses: apache/maven-settings-action@v2
+        with:
+          servers: |
+            [
+              {
+                "id": "github",
+                "username": "${{ github.actor }}",
+                "password": "${{ secrets.GITHUB_TOKEN }}"
+              }
+            ]
 
       # 3. Instalar dependencias
       - name: Install dependencies
@@ -48,10 +59,8 @@ jobs:
         run: mvn package -DskipTests
 
       # 6. Publicar en GitHub Packages
-      # Inyectamos el nombre del repositorio en minúsculas para evitar errores 401 en el servidor de GitHub
+      # Maven usará el settings.xml configurado por la acción anterior
       - name: Publish to GitHub Packages
-        run: |
-          REPO_LOWERCASE=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          mvn deploy -DskipTests -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/$REPO_LOWERCASE
+        run: mvn deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
