@@ -38,5 +38,17 @@
                 <version>3.3.0</version>
             </plugin>
         </plugins>
-    </build>
+    </build> 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/nttdata-hybridcloud/basic-java-project</url>
+        </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages Snapshots</name>
+            <url>https://maven.pkg.github.com/nttdata-hybridcloud/basic-java-project</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
