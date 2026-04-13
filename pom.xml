@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.vodafone</groupId>
+    <groupId>com.github.NTTData-HybridCloud</groupId>
     <artifactId>basic-java-project</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>basic-java-project</name>
@@ -38,5 +38,17 @@
                 <version>3.3.0</version>
             </plugin>
         </plugins>
-    </build>
+    </build> 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/nttdata-hybridcloud/basic-java-project</url>
+        </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages Snapshots</name>
+            <url>https://maven.pkg.github.com/nttdata-hybridcloud/basic-java-project</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
